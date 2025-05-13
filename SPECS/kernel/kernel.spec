@@ -1,13 +1,13 @@
 Summary:        Linux Kernel
 Name:           kernel
-Version:        6.12.23
+Version:        6.12.24
 Release:        1%{?dist}
 License:        GPLv2
 Vendor:         Intel Corporation
 Distribution:   Edge Microvisor Toolkit
 Group:          System Environment/Kernel
 URL:            https://github.com/intel/linux-intel-lts
-Source0:        https://github.com/intel/linux-intel-lts/archive/refs/tags/lts-v6.12.23-emt-250415T094615Z.tar.gz
+Source0:        https://github.com/intel/linux-intel-lts/archive/refs/tags/lts-v6.12.24-linux-250501T040919Z.tar.gz
 Source1:        config
 Source3:        sha512hmac-openssl.sh
 Source4:        emt-ca-20211013.pem
@@ -414,6 +414,9 @@ echo "initrd of kernel %{uname_r} removed" >&2
 %{_sysconfdir}/bash_completion.d/bpftool
 
 %changelog
+* Tue May 13 2025 Aaron Chan <aaron.chun.yew.chan@intel.com> - 6.12.24-1
+- Update kernel to 6.12.24 to support ARL platform
+
 * Mon Apr 21 2025 Ren Jiaojiao <jiaojiaox.ren@intel.com> - 6.12.23-1
 - Update kernel to 6.12.23
 

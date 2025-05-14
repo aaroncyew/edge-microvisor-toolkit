@@ -168,7 +168,7 @@ This package contains the bpftool, which allows inspection and simple
 manipulation of eBPF programs and maps.
 
 %prep
-%autosetup -p1 -n lts-v6.12.23-emt-250415T094615Z
+%autosetup -p1 -n lts-v6.12.24-linux-250501T040919Z
 # %patch 0 -p1
 make mrproper
 

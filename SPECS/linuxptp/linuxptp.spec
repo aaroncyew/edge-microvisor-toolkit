@@ -1,18 +1,18 @@
-Vendor:         Microsoft Corporation
-Distribution:   Azure Linux
+Vendor:         Intel Corporation
+Distribution:   Edge Microvisor Toolkit
 %global _hardened_build 1
 %global testsuite_ver ff37e2
 %global clknetsim_ver 9ed48d
 
 Name:		linuxptp
-Version:	3.1.1
+Version:	4.3
 Release:	1%{?dist}
 Summary:	PTP implementation for Linux
 
 License:	GPLv2+
 URL:		http://linuxptp.sourceforge.net/
 
-Source0:	https://sourceforge.net/projects/%{name}/files/v3.1/%{name}-%{version}.tgz
+Source0:    https://github.com/richardcochran/{name}/archive/refs/tags/v%{version}.tar.gz
 Source1:	phc2sys.service
 Source2:	ptp4l.service
 Source3:	timemaster.service
@@ -30,7 +30,18 @@ Patch1:		clknetsim-phc2sys.patch
 
 # The following patch is a combination of multiple patches to enable HA in linuxptp
 # https://review.opendev.org/c/starlingx/integ/+/891638
-Patch2:         enable-ha.patch
+Patch2:     enable-ha.patch
+
+# Time Sensitive Network patches (noble)
+Patch3:     0001-Add-a-CMLDS-enabled-example-config-based-on-gPTP.cfg.patch
+Patch4:     0002-Refactor-port-implement-gPTP-capable-TLV-signaling-m.patch
+Patch5:     0003-port-Implement-asCapableAcrossDomains-and-neighborGp.patch
+Patch6:     0004-internal-With-ignore_transport_specific-accept-major.patch
+Patch7:     0005-Filter-any-PTP-frames-with-the-source-MAC-of-the-loc.patch
+Patch8:     0006-port-Drop-Received-802.1AS-Packets-with-Invalid-tran.patch
+Patch9:     0007-port-Refactor-gPTP-capable-TLV-Signaling-Implementat.patch
+Patch10:    0008-clock-Check-priority1-not-set-to-255-as-a-requiremen.patch
+Patch11:    0009-port-Add-neighborGptpCapable-AS2011-backward-compati.patch
 
 BuildRequires:	gcc gcc-c++ make systemd
 
@@ -67,9 +78,9 @@ mkdir -p $RPM_BUILD_ROOT{%{_sysconfdir}/sysconfig,%{_unitdir},%{_mandir}/man5}
 install -m 644 -p %{SOURCE1} %{SOURCE2} %{SOURCE3} $RPM_BUILD_ROOT%{_unitdir}
 install -m 644 -p %{SOURCE4} %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}
 
-echo 'OPTIONS="-f /etc/ptp4l.conf"' > \
+echo 'OPTIONS="-f /etc/ptp4l.conf -i %I"' > \
 	$RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/ptp4l
-echo 'OPTIONS="-a -r"' > $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/phc2sys
+echo 'OPTIONS="-w -s %I"' > $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/phc2sys
 
 echo '.so man8/ptp4l.8' > $RPM_BUILD_ROOT%{_mandir}/man5/ptp4l.conf.5
 echo '.so man8/timemaster.8' > $RPM_BUILD_ROOT%{_mandir}/man5/timemaster.conf.5
@@ -111,6 +122,10 @@ PATH=..:$PATH ./run
 %{_mandir}/man8/*.8*
 
 %changelog
+* Wed May 28 2025 Aaron Chan <aaron.chun.yew.chan@intel.com> - 4.3-1
+- update to 4.3
+- add TSN patches (noble)
+
 * Thu Nov 16 2023 Harshit Gupta <guptaharshit@microsoft.com> - 3.1.1-1
 - Initial CBL-Mariner import from Fedora 37 (license: MIT).
 - License Verified.

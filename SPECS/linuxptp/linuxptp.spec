@@ -57,15 +57,15 @@ pushd testsuite/clknetsim
 popd
 
 # Apply TSN patches
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
+%patch 1 -p1
+%patch 2 -p1
+%patch 3 -p1
+%patch 4 -p1
+%patch 5 -p1
+%patch 6 -p1
+%patch 7 -p1
+%patch 8 -p1
+%patch 9 -p1
 
 %build
 %{make_build} \
@@ -119,6 +119,7 @@ PATH=..:$PATH ./run
 %{_sbindir}/ptp4l
 %{_sbindir}/timemaster
 %{_sbindir}/ts2phc
+%{_sbindir}/tz2alt
 %{_mandir}/man5/*.5*
 %{_mandir}/man8/*.8*
 

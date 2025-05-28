@@ -23,25 +23,19 @@ Source10:	linuxptp-testsuite-%{testsuite_ver}.tar.gz
 # simulator for test suite
 Source11:	clknetsim-%{clknetsim_ver}.tar.gz
 
-# fix handling of zero-length messages
-Patch0:		linuxptp-zerolength.patch
 # revert phc2sys options needed by the older version of test suite
-Patch1:		clknetsim-phc2sys.patch
-
-# The following patch is a combination of multiple patches to enable HA in linuxptp
-# https://review.opendev.org/c/starlingx/integ/+/891638
-Patch2:     enable-ha.patch
+Patch0:		clknetsim-phc2sys.patch
 
 # Time Sensitive Network patches (noble)
-Patch3:     0001-Add-a-CMLDS-enabled-example-config-based-on-gPTP.cfg.patch
-Patch4:     0002-Refactor-port-implement-gPTP-capable-TLV-signaling-m.patch
-Patch5:     0003-port-Implement-asCapableAcrossDomains-and-neighborGp.patch
-Patch6:     0004-internal-With-ignore_transport_specific-accept-major.patch
-Patch7:     0005-Filter-any-PTP-frames-with-the-source-MAC-of-the-loc.patch
-Patch8:     0006-port-Drop-Received-802.1AS-Packets-with-Invalid-tran.patch
-Patch9:     0007-port-Refactor-gPTP-capable-TLV-Signaling-Implementat.patch
-Patch10:    0008-clock-Check-priority1-not-set-to-255-as-a-requiremen.patch
-Patch11:    0009-port-Add-neighborGptpCapable-AS2011-backward-compati.patch
+Patch1:     0001-Add-a-CMLDS-enabled-example-config-based-on-gPTP.cfg.patch
+Patch2:     0002-Refactor-port-implement-gPTP-capable-TLV-signaling-m.patch
+Patch3:     0003-port-Implement-asCapableAcrossDomains-and-neighborGp.patch
+Patch4:     0004-internal-With-ignore_transport_specific-accept-major.patch
+Patch5:     0005-Filter-any-PTP-frames-with-the-source-MAC-of-the-loc.patch
+Patch6:     0006-port-Drop-Received-802.1AS-Packets-with-Invalid-tran.patch
+Patch7:     0007-port-Refactor-gPTP-capable-TLV-Signaling-Implementat.patch
+Patch8:     0008-clock-Check-priority1-not-set-to-255-as-a-requiremen.patch
+Patch9:     0009-port-Add-neighborGptpCapable-AS2011-backward-compati.patch
 
 BuildRequires:	gcc gcc-c++ make systemd
 
@@ -56,15 +50,15 @@ Supporting legacy APIs and other platforms is not a goal.
 
 %prep
 %setup -q -a 10 -a 11 -n %{name}-%{!?gitfullver:%{version}}%{?gitfullver}
-%patch 0 -p1 -b .zerolength
+# %patch 0 -p1 -b .zerolength
 mv linuxptp-testsuite-%{testsuite_ver}* testsuite
 mv clknetsim-%{clknetsim_ver}* testsuite/clknetsim
 
 pushd testsuite/clknetsim
-%patch 1 -p1 -R -b .phc2sys
+%patch 0 -p1 -R -b .phc2sys
 popd
 
-%patch 2 -p1 -b .pre-ha
+# %patch 2 -p1 -b .pre-ha
 
 %build
 %{make_build} \

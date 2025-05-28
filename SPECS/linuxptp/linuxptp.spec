@@ -25,7 +25,6 @@ Source11:	clknetsim-%{clknetsim_ver}.tar.gz
 
 # revert phc2sys options needed by the older version of test suite
 Patch0:		clknetsim-phc2sys.patch
-
 # Time Sensitive Network patches (noble)
 Patch1:     0001-Add-a-CMLDS-enabled-example-config-based-on-gPTP.cfg.patch
 Patch2:     0002-Refactor-port-implement-gPTP-capable-TLV-signaling-m.patch
@@ -50,7 +49,6 @@ Supporting legacy APIs and other platforms is not a goal.
 
 %prep
 %setup -q -a 10 -a 11 -n %{name}-%{!?gitfullver:%{version}}%{?gitfullver}
-# %patch 0 -p1 -b .zerolength
 mv linuxptp-testsuite-%{testsuite_ver}* testsuite
 mv clknetsim-%{clknetsim_ver}* testsuite/clknetsim
 
@@ -58,7 +56,16 @@ pushd testsuite/clknetsim
 %patch 0 -p1 -R -b .phc2sys
 popd
 
-# %patch 2 -p1 -b .pre-ha
+# Apply TSN patches
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
 
 %build
 %{make_build} \

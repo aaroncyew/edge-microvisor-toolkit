@@ -1,7 +1,7 @@
 {
  "Signatures": {
   "clknetsim-9ed48d.tar.gz": "4e464ddb20c6436e8dfbc82305ae5187831a4b6b60b89dcdc92f59a0d3539496",
-  "linuxptp-4.3.tar.gz": "735410d92c4f5983530f6b298ac449e062e51833f672912decde96f305916b82",
+  "linuxptp-4.3.tgz": "735410d92c4f5983530f6b298ac449e062e51833f672912decde96f305916b82",
   "linuxptp-testsuite-ff37e2.tar.gz": "038b1bb07ce5f03b3207bbfabe6f85d2cbbb16ef54b121a35749ca7e01d54648",
   "phc2sys.service": "83f6dcd99abb5026dfaa039598918dbac42c25c0bbf22d03349fa07cf4be30b9",
   "ptp4l.conf": "c3ae7d8d845619f41f3743da9e46ea6f690d218383f127e0bf2b64de2e69c283",

@@ -12,7 +12,7 @@ Summary:	PTP implementation for Linux
 License:	GPLv2+
 URL:		http://linuxptp.sourceforge.net/
 
-Source0:    https://github.com/richardcochran/{name}/archive/refs/tags/v%{version}.tar.gz
+Source0:    https://downloads.nwtime.org/%{name}/%{name}-%{version}.tgz
 Source1:	phc2sys.service
 Source2:	ptp4l.service
 Source3:	timemaster.service

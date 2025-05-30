@@ -1,7 +1,7 @@
 Summary:        Basic and advanced IPV4-based networking
 Name:           iproute
 Version:        6.7.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        GPLv2
 URL:            https://www.kernel.org/pub/linux/utils/net/iproute2
 Group:          Applications/System
@@ -23,7 +23,13 @@ BuildRequires:      pkgconfig
 Requires:           libbpf
 Requires:           psmisc
 Provides:           /sbin/ip
-	
+
+# Add TSN patches
+Patch0:             0001-Add-moo-feature.patch
+Patch1:             0001-taprio-Add-support-for-preempt-parameter-v2.patch
+Patch2:             0002-mqprio-Add-support-for-configuring-frame-preemption-v2.patch
+Patch3:             0003-taprio-Add-support-for-the-SetAndHold-and-SetAndRele.patch
+
 %description
 The iproute package contains networking utilities (ip and rtmon, for example)
 which are designed to use the advanced networking capabilities of the Linux
@@ -125,6 +131,9 @@ rm -rf '%{buildroot}%{_docdir}'
 %{_includedir}/iproute2/bpf_elf.h
  
 %changelog
+* Fri May 30 2025 Aaron Chan <aaron.chun.yew.chan@intel.com> - 6.7.0-3
+- Add TSN patches from iproute2 v6.5.0 (ubuntu noble)
+
 * Fri Jun 07 2024 Pawel Winogrodzki <pawelwi@microsoft.com> - 6.7.0-2
 - Remove dependency on 'libdb'.
 

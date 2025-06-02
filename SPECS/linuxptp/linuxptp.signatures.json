@@ -3,9 +3,9 @@
   "clknetsim-9ed48d.tar.gz": "4e464ddb20c6436e8dfbc82305ae5187831a4b6b60b89dcdc92f59a0d3539496",
   "linuxptp-4.3.tgz": "735410d92c4f5983530f6b298ac449e062e51833f672912decde96f305916b82",
   "linuxptp-testsuite-ff37e2.tar.gz": "038b1bb07ce5f03b3207bbfabe6f85d2cbbb16ef54b121a35749ca7e01d54648",
-  "phc2sys.service": "83f6dcd99abb5026dfaa039598918dbac42c25c0bbf22d03349fa07cf4be30b9",
-  "ptp4l.conf": "c3ae7d8d845619f41f3743da9e46ea6f690d218383f127e0bf2b64de2e69c283",
-  "ptp4l.service": "ad855eebc67d3a39d3df2a9d6d9b202970faaa6828172f15ab16e8ceab79a373",
+  "phc2sys@.service": "b673d8f529efbdf2d29a21ebab1d863f02ce51ebe4915accbd996cea5e8ae0cd",
+  "ptp4l.conf": "8023f3904cb8eb84f1b0717e8caaf657459d73a6b827e8a6439aa7e94d15de20",
+  "ptp4l@.service": "e9bd43619967400badb2c9924eb9935863ef1d5a9c7212f85535a304d3828d76",
   "timemaster.conf": "c8bbe715944126ac4063199981c4e157228ee52ed7caa71e2a9523d5d0c57943",
   "timemaster.service": "ab1e3bfea1ccf15c81083ed6c9ee500ad1c9322b76ee3328fea3aef8ef3504ca"
  }

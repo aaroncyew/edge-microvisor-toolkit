@@ -13,8 +13,8 @@ License:	GPLv2+
 URL:		http://linuxptp.sourceforge.net/
 
 Source0:    https://downloads.nwtime.org/%{name}/%{name}-%{version}.tgz
-Source1:	phc2sys.service
-Source2:	ptp4l.service
+Source1:	phc2sys@.service
+Source2:	ptp4l@.service
 Source3:	timemaster.service
 Source4:	timemaster.conf
 Source5:	ptp4l.conf
@@ -76,12 +76,13 @@ popd
 %makeinstall
 
 mkdir -p $RPM_BUILD_ROOT{%{_sysconfdir}/sysconfig,%{_unitdir},%{_mandir}/man5}
+install -m 644 -p configs/default.cfg $RPM_BUILD_ROOT%{_sysconfdir}/ptp4l.conf
 install -m 644 -p %{SOURCE1} %{SOURCE2} %{SOURCE3} $RPM_BUILD_ROOT%{_unitdir}
-install -m 644 -p %{SOURCE4} %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}
+install -m 644 -p %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}
+cat $RPM_BUILD_ROOT%{_sysconfdir}/ptp4l.conf
 
-echo 'OPTIONS="-f /etc/ptp4l.conf -i %I"' > \
-	$RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/ptp4l
-echo 'OPTIONS="-w -s %I"' > $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/phc2sys
+echo 'OPTIONS="-f /etc/ptp4l.conf"' > $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/ptp4l
+echo 'OPTIONS="-w -s"' > $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/phc2sys
 
 echo '.so man8/ptp4l.8' > $RPM_BUILD_ROOT%{_mandir}/man5/ptp4l.conf.5
 echo '.so man8/timemaster.8' > $RPM_BUILD_ROOT%{_mandir}/man5/timemaster.conf.5
@@ -94,13 +95,13 @@ export CLKNETSIM_RANDOM_SEED=26743
 PATH=..:$PATH ./run
 
 %post
-%systemd_post phc2sys.service ptp4l.service timemaster.service
+%systemd_post phc2sys@.service ptp4l@.service timemaster.service
 
 %preun
-%systemd_preun phc2sys.service ptp4l.service timemaster.service
+%systemd_preun phc2sys@.service ptp4l@.service timemaster.service
 
 %postun
-%systemd_postun_with_restart phc2sys.service ptp4l.service timemaster.service
+%systemd_postun_with_restart phc2sys@.service ptp4l@.service timemaster.service
 
 %files
 %doc COPYING README.org configs
@@ -108,8 +109,8 @@ PATH=..:$PATH ./run
 %config(noreplace) %{_sysconfdir}/sysconfig/phc2sys
 %config(noreplace) %{_sysconfdir}/sysconfig/ptp4l
 %config(noreplace) %{_sysconfdir}/timemaster.conf
-%{_unitdir}/phc2sys.service
-%{_unitdir}/ptp4l.service
+%{_unitdir}/phc2sys@.service
+%{_unitdir}/ptp4l@.service
 %{_unitdir}/timemaster.service
 %{_sbindir}/hwstamp_ctl
 %{_sbindir}/nsm

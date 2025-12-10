@@ -1,0 +1,116 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+# This action rebuilds the package at 3.0-dev (staging) branch
+# and uses the CVE security tools to check for any known vulnerabilities.
+---
+name: Check CVE
+
+on:
+  pull_request:
+    branches:
+      - 3.0-dev
+    types: [opened, synchronize, reopened, edited]
+    paths:
+      - '**.spec'
+      - 'CVE**.patch'
+  push:
+    branches:
+      - 3.0-dev
+    paths:
+      - '**.spec'
+      - 'CVE**.patch'
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  GITHUB_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+  GITHUB_PULL_REQUEST_MERGER_REPO: ${{ github.event.pull_request.head.repo.url }}
+  GITHUB_PULL_REQUEST_MERGER_BRANCH: ${{ github.event.pull_request.head.ref }}
+  GITHUB_PULL_REQUEST_MERGER_EMAIL: aaron.chun.yew.chan@intel.com
+  GITHUB_REPO_OWNER: open-edge-platform
+  GITHUB_REPO_NAME: edge-microvisor-toolkit
+
+jobs:
+  check:
+    name: Check CVE in Pull Request
+    runs-on: trivy
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      # - name: Get Python dependencies
+      #   run: |
+      #     python3 -m pip install GitPython requests python-dotenv python-rpm-spec pyrpm pyGithub
+      #     pip freeze > requirements.txt
+
+      - name: Pull Request and Repository Info
+        run: |
+          echo "Requester (GitRepo)  : ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "Requester (Branch)   : ${{ github.event.pull_request.head.ref }}"
+          echo "Current PR (number)  : ${{ github.event.pull_request.number }}"
+          echo "Requester (user)     : ${{ github.event.pull_request.user.login }}"
+          echo "Requester (usermail) : ${{ github.event.pull_request.user.email }}"
+ 
+      - name: Get Package Name and JIRA from PR body
+        run: |
+          EMT_PACKAGE_NAME=$(echo "${{ github.event.pull_request.body }}" | grep -oP '(?<=Package Name:\s)(.*)' || echo "Package Name not found")
+          echo "EMT_PACKAGE_NAME=$EMT_PACKAGE_NAME" >> $GITHUB_ENV
+          EMT_JIRA_ITEP=$(echo "${{ github.event.pull_request.body }}" | grep -oP '(?<=JIRA:\s)(\S+)' || echo "JIRA not found")
+          echo "EMT_JIRA_ITEP=$EMT_JIRA_ITEP" >> $GITHUB_ENV
+
+      # - name: assign JIRA label to PR
+      #   uses: actions/github-script@v7
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      #   with:
+      #     github-token: ${{ env.GITHUB_TOKEN }}
+      #     base-url: ${{ github.api_url }}
+      #     script: |
+      #       const jiraLabel = '${{ env.EMT_JIRA_ITEP }}';
+      #       if (jiraLabel && jiraLabel !== 'JIRA not found') {
+      #         await github.rest.issues.addLabels({
+      #           owner: '${{ env.GITHUB_REPO_OWNER }}',
+      #           repo: '${{ env.GITHUB_REPO_NAME }}',
+      #           issue_number: '${{ env.GITHUB_PULL_REQUEST_NUMBER }}',
+      #           labels: [jiraLabel],
+      #         });
+      #         console.log(`Added label: ${jiraLabel}`);
+      #       } else {
+      #         console.log('No JIRA label found in PR body.');
+      #       }
+
+      # - name: Run Package Tests and CVE Check
+      #   if: contains(github.event.pull_request.head.repo.full_name, 'intel-innersource') || contains(github.event.pull_request.repo.full_name, 'intel-sandbox')
+      #   env:
+      #     BDBA_BASE_URL: ${{ secrets.BDBA_BASE_URL }}
+      #     BDBA_TOKEN: ${{ secrets.BDBA_TOKEN }}
+      #     BDBA_GROUP: ${{ secrets.BDBA_GROUP }}
+      #     CUSTOM_DATA: BuildArch:x86_64,PullRequest:True,MergerRepo:${{ env.GITHUB_PULL_REQUEST_MERGER_REPO }},MergerBranch:${{ env.GITHUB_PULL_REQUEST_MERGER_BRANCH }}
+      #     JENKINS_BUILD_TYPE: BUILD_SPECS
+      #     EMT_PACKAGE_NAME: ${{ env.EMT_PACKAGE_NAME }}
+      #   run: |
+      #     cp ~/.env .env
+      #     cp bdba.py script/jenkins/
+      #     python3 ./script/jenkins/build_packagetest.py \
+      #     --jenkins-joburl ${{ secrets.JENKINS_JOB_URL }} \
+      #     --username ${{ secrets.JENKINS_JOB_USERNAME }} \
+      #     --token ${{ secrets.JENKINS_JOB_TOKEN }} \
+      #     --build-type "${{ env.JENKINS_BUILD_TYPE }}" \
+      #     --package "${{ env.EMT_PACKAGE_NAME }}," \
+      #     --repourl ${{ env.GITHUB_PULL_REQUEST_MERGER_REPO }} \
+      #     --repobranch ${{ env.GITHUB_PULL_REQUEST_MERGER_BRANCH }} \
+      #     --send-email "${{ env.GITHUB_PULL_REQUEST_MERGER_EMAIL }}" \
+      #     --build-container-image True \
+      #     --pull_request_num ${{ env.GITHUB_PULL_REQUEST_NUMBER }}
+
